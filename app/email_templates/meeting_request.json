@@ -1,0 +1,8 @@
+{
+  "name": "Meeting Request",
+  "description": "Template for requesting a meeting",
+  "subject": "Meeting Request: {{meeting_topic}}",
+  "body": "Dear {{recipient_name}},\n\nI hope this email finds you well. I would like to request a meeting to discuss {{meeting_topic}}.\n\n{{meeting_details}}\n\nPlease let me know your availability for the following times:\n{{time_slots}}\n\nLooking forward to your response.\n\nBest regards,\n{{sender_name}}",
+  "variables": ["recipient_name", "meeting_topic", "meeting_details", "time_slots", "sender_name"],
+  "category": "business"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Welcome Email",
+  "description": "Template for welcoming new users",
+  "subject": "Welcome to {{company_name}}!",
+  "body": "Dear {{recipient_name}},\n\nWelcome to {{company_name}}! We're excited to have you on board.\n\n{{custom_message}}\n\nIf you have any questions, feel free to reach out.\n\nBest regards,\n{{sender_name}}",
+  "variables": ["recipient_name", "company_name", "custom_message", "sender_name"],
+  "category": "onboarding"
+}

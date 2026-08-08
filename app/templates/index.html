@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Email Agent</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Email Agent</h1>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('compose')">Compose</button>
+            <button class="tab" onclick="showTab('inbox')">Inbox</button>
+            <button class="tab" onclick="showTab('threads')">Threads</button>
+            <button class="tab" onclick="showTab('scheduled')">Scheduled</button>
+            <button class="tab" onclick="showTab('templates')">Templates</button>
+            <button class="tab" onclick="showTab('analytics')">Analytics</button>
+        </div>
+        
+        <!-- Compose Tab -->
+        <div id="compose" class="tab-content active">
+            <div class="form-group">
+                <label>Use Template:</label>
+                <select id="template-select" onchange="loadTemplate()">
+                    <option value="">-- Select Template --</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Recipient:</label>
+                <input type="email" id="recipient" placeholder="recipient@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label>Context:</label>
+                <textarea id="context" rows="4" placeholder="Describe what the email should be about..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Tone:</label>
+                <select id="tone">
+                    <option value="professional">Professional</option>
+                    <option value="friendly">Friendly</option>
+                    <option value="formal">Formal</option>
+                    <option value="casual">Casual</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="schedule-toggle" onchange="toggleScheduleOptions()">
+                    Schedule Email
+                </label>
+            </div>
+            
+            <div id="schedule-options" class="hidden">
+                <div class="form-group">
+                    <label>Scheduled Date & Time:</label>
+                    <input type="datetime-local" id="scheduled-time">
+                </div>
+            </div>
+            
+            <button onclick="generateEmail()">Generate Email</button>
+            
+            <div id="generated-email" class="hidden">
+                <h3>Generated Email:</h3>
+                <div class="form-group">
+                    <label>Subject:</label>
+                    <input type="text" id="subject" placeholder="Email subject">
+                </div>
+                <div class="form-group">
+                    <label>Body:</label>
+                    <textarea id="email-body" rows="10"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Attachments:</label>
+                    <input type="file" id="attachment-input" multiple onchange="handleAttachmentUpload()">
+                    <div id="attachment-list" style="margin-top: 10px;"></div>
+                </div>
+                
+                <button onclick="sendEmail()">Send Email</button>
+                <button onclick="scheduleEmail()" id="schedule-btn" class="hidden">Schedule Email</button>
+            </div>
+            
+            <!-- Template Variables Modal -->
+            <div id="template-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeTemplateModal()">&times;</span>
+                    <h2>Template Variables</h2>
+                    <div id="template-variables"></div>
+                    <button onclick="applyTemplate()">Apply Template</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Inbox Tab -->
+        <div id="inbox" class="tab-content">
+            <button onclick="loadUnreadEmails()">Load Unread Emails</button>
+            <div id="email-list"></div>
+        </div>
+        
+        <!-- Threads Tab -->
+        <div id="threads" class="tab-content">
+            <button onclick="loadEmailThreads()">Load Email Threads</button>
+            <div id="thread-list"></div>
+        </div>
+        
+        <!-- Thread Detail Modal -->
+        <div id="thread-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeThreadModal()">&times;</span>
+                <h2 id="thread-subject">Thread Subject</h2>
+                <div id="thread-messages"></div>
+                <button onclick="summarizeThread()">Summarize Thread</button>
+                <div id="thread-summary"></div>
+            </div>
+        </div>
+        
+        <!-- Scheduled Tab -->
+        <div id="scheduled" class="tab-content">
+            <button onclick="loadScheduledEmails()">Load Scheduled Emails</button>
+            <div id="scheduled-list"></div>
+        </div>
+        
+        <!-- Templates Tab -->
+        <div id="templates" class="tab-content">
+            <button onclick="loadTemplates()">Load Templates</button>
+            <div id="templates-list"></div>
+            
+            <h3>Create New Template</h3>
+            <div class="form-group">
+                <label>Template Name:</label>
+                <input type="text" id="template-name" placeholder="Template name">
+            </div>
+            <div class="form-group">
+                <label>Description:</label>
+                <input type="text" id="template-description" placeholder="Template description">
+            </div>
+            <div class="form-group">
+                <label>Category:</label>
+                <input type="text" id="template-category" placeholder="Category (e.g., business, personal)">
+            </div>
+            <div class="form-group">
+                <label>Subject:</label>
+                <input type="text" id="template-subject" placeholder="Email subject with {{variables}}">
+            </div>
+            <div class="form-group">
+                <label>Body:</label>
+                <textarea id="template-body" rows="10" placeholder="Email body with {{variables}}"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Variables (comma-separated):</label>
+                <input type="text" id="template-variables" placeholder="variable1, variable2, variable3">
+            </div>
+            <button onclick="createTemplate()">Create Template</button>
+        </div>
+        
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <button onclick="loadAnalytics()">Load Analytics</button>
+            <div id="analytics-dashboard"></div>
+            
+            <div class="analytics-section">
+                <h3>Analytics Summary</h3>
+                <div id="analytics-summary"></div>
+            </div>
+            
+            <div class="analytics-section">
+                <h3>Email Categories</h3>
+                <div id="email-categories"></div>
+            </div>
+            
+            <div class="analytics-section">
+                <h3>Daily Activity (Last 30 Days)</h3>
+                <div id="daily-activity"></div>
+            </div>
+            
+            <div class="analytics-section">
+                <h3>Top Contacts</h3>
+                <div id="top-contacts"></div>
+            </div>
+            
+            <div class="analytics-section">
+                <h3>Template Usage</h3>
+                <div id="template-usage"></div>
+            </div>
+            
+            <div class="analytics-section">
+                <h3>Recent Activity</h3>
+                <div id="activity-log"></div>
+            </div>
+            
+            <div class="analytics-section">
+                <h3>Email Trends (Last 7 Days)</h3>
+                <div id="email-trends"></div>
+            </div>
+            
+            <button onclick="resetAnalytics()" style="background: #dc3545; margin-top: 20px;">Reset Analytics</button>
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+    
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

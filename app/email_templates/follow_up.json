@@ -1,0 +1,8 @@
+{
+  "name": "Follow-up Email",
+  "description": "Template for following up on previous communication",
+  "subject": "Follow-up: {{previous_subject}}",
+  "body": "Dear {{recipient_name}},\n\nI wanted to follow up on our previous conversation regarding {{topic}}.\n\n{{context}}\n\nPlease let me know if you need any additional information or have any questions.\n\nBest regards,\n{{sender_name}}",
+  "variables": ["recipient_name", "previous_subject", "topic", "context", "sender_name"],
+  "category": "business"
+}
