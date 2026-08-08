@@ -60,7 +60,7 @@ const Validator = {
     }
 };
 
-function showTab(tabName) {
+function showTab(tabName, buttonElement) {
     // Hide all tabs
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
@@ -70,22 +70,21 @@ function showTab(tabName) {
     });
     
     // Show selected tab
-    document.getElementById(tabName).classList.add('active');
+    const targetTab = document.getElementById(tabName);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
     
-    // Find and activate the button
-    const buttons = document.querySelectorAll('.tab');
-    buttons.forEach(button => {
-        if (button.textContent.toLowerCase() === tabName.toLowerCase()) {
-            button.classList.add('active');
-        }
-    });
+    // Activate the clicked button
+    if (buttonElement) {
+        buttonElement.classList.add('active');
+    }
     
-    // Load templates when templates tab is opened
+    // Load data when specific tabs are opened
     if (tabName === 'templates') {
         loadTemplates();
     }
     
-    // Load analytics when analytics tab is opened
     if (tabName === 'analytics') {
         loadAnalytics();
     }
@@ -95,6 +94,7 @@ async function generateEmail() {
     const recipient = document.getElementById('recipient').value;
     const context = document.getElementById('context').value;
     const tone = document.getElementById('tone').value;
+    const button = document.querySelector('button[onclick="generateEmail()"]');
     
     // Validate inputs
     const emailValidation = Validator.validateEmail(recipient);
@@ -112,6 +112,8 @@ async function generateEmail() {
         showStatus('Context is too long (max 5000 characters)', 'error');
         return;
     }
+    
+    showLoadingState(button, 'Generate Email');
     
     try {
         const response = await fetch(`${API_URL}/generate-email`, {
@@ -133,6 +135,8 @@ async function generateEmail() {
         }
     } catch (error) {
         showStatus('Error: ' + error.message, 'error');
+    } finally {
+        resetButtonState(button);
     }
 }
 
@@ -357,6 +361,7 @@ function showStatus(message, type) {
     status.className = 'status ' + type;
     status.style.display = 'block';
     
+    // Auto-hide after 5 seconds
     setTimeout(() => {
         status.style.display = 'none';
     }, 5000);

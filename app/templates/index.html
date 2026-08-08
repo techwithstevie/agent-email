@@ -4,42 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Email Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📧</text></svg>">
 </head>
 <body>
     <div class="container">
-        <h1>AI Email Agent</h1>
+        <header>
+            <h1>AI Email Agent</h1>
+            <p style="color: var(--text-secondary); margin-bottom: var(--spacing-lg);">Modern email management powered by artificial intelligence</p>
+        </header>
         
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('compose')">Compose</button>
-            <button class="tab" onclick="showTab('inbox')">Inbox</button>
-            <button class="tab" onclick="showTab('threads')">Threads</button>
-            <button class="tab" onclick="showTab('scheduled')">Scheduled</button>
-            <button class="tab" onclick="showTab('templates')">Templates</button>
-            <button class="tab" onclick="showTab('analytics')">Analytics</button>
-        </div>
+        <nav class="tabs">
+            <button class="tab active" onclick="showTab('compose', this)">Compose</button>
+            <button class="tab" onclick="showTab('inbox', this)">Inbox</button>
+            <button class="tab" onclick="showTab('threads', this)">Threads</button>
+            <button class="tab" onclick="showTab('scheduled', this)">Scheduled</button>
+            <button class="tab" onclick="showTab('templates', this)">Templates</button>
+            <button class="tab" onclick="showTab('analytics', this)">Analytics</button>
+        </nav>
         
         <!-- Compose Tab -->
         <div id="compose" class="tab-content active">
             <div class="form-group">
-                <label>Use Template:</label>
+                <label>Use Template</label>
                 <select id="template-select" onchange="loadTemplate()">
                     <option value="">-- Select Template --</option>
                 </select>
             </div>
             
             <div class="form-group">
-                <label>Recipient:</label>
+                <label>Recipient</label>
                 <input type="email" id="recipient" placeholder="recipient@example.com">
             </div>
             
             <div class="form-group">
-                <label>Context:</label>
+                <label>Context</label>
                 <textarea id="context" rows="4" placeholder="Describe what the email should be about..."></textarea>
             </div>
             
             <div class="form-group">
-                <label>Tone:</label>
+                <label>Tone</label>
                 <select id="tone">
                     <option value="professional">Professional</option>
                     <option value="friendly">Friendly</option>
@@ -57,7 +64,7 @@
             
             <div id="schedule-options" class="hidden">
                 <div class="form-group">
-                    <label>Scheduled Date & Time:</label>
+                    <label>Scheduled Date & Time</label>
                     <input type="datetime-local" id="scheduled-time">
                 </div>
             </div>
@@ -65,24 +72,26 @@
             <button onclick="generateEmail()">Generate Email</button>
             
             <div id="generated-email" class="hidden">
-                <h3>Generated Email:</h3>
+                <h3>Generated Email</h3>
                 <div class="form-group">
-                    <label>Subject:</label>
+                    <label>Subject</label>
                     <input type="text" id="subject" placeholder="Email subject">
                 </div>
                 <div class="form-group">
-                    <label>Body:</label>
+                    <label>Body</label>
                     <textarea id="email-body" rows="10"></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label>Attachments:</label>
+                    <label>Attachments</label>
                     <input type="file" id="attachment-input" multiple onchange="handleAttachmentUpload()">
-                    <div id="attachment-list" style="margin-top: 10px;"></div>
+                    <div id="attachment-list"></div>
                 </div>
                 
-                <button onclick="sendEmail()">Send Email</button>
-                <button onclick="scheduleEmail()" id="schedule-btn" class="hidden">Schedule Email</button>
+                <div style="display: flex; gap: var(--spacing-sm);">
+                    <button onclick="sendEmail()">Send Email</button>
+                    <button onclick="scheduleEmail()" id="schedule-btn" class="hidden">Schedule Email</button>
+                </div>
             </div>
             
             <!-- Template Variables Modal -->
@@ -130,29 +139,29 @@
             <button onclick="loadTemplates()">Load Templates</button>
             <div id="templates-list"></div>
             
-            <h3>Create New Template</h3>
+            <h3 style="margin-top: var(--spacing-xl);">Create New Template</h3>
             <div class="form-group">
-                <label>Template Name:</label>
+                <label>Template Name</label>
                 <input type="text" id="template-name" placeholder="Template name">
             </div>
             <div class="form-group">
-                <label>Description:</label>
+                <label>Description</label>
                 <input type="text" id="template-description" placeholder="Template description">
             </div>
             <div class="form-group">
-                <label>Category:</label>
+                <label>Category</label>
                 <input type="text" id="template-category" placeholder="Category (e.g., business, personal)">
             </div>
             <div class="form-group">
-                <label>Subject:</label>
+                <label>Subject</label>
                 <input type="text" id="template-subject" placeholder="Email subject with {{variables}}">
             </div>
             <div class="form-group">
-                <label>Body:</label>
+                <label>Body</label>
                 <textarea id="template-body" rows="10" placeholder="Email body with {{variables}}"></textarea>
             </div>
             <div class="form-group">
-                <label>Variables (comma-separated):</label>
+                <label>Variables (comma-separated)</label>
                 <input type="text" id="template-variables" placeholder="variable1, variable2, variable3">
             </div>
             <button onclick="createTemplate()">Create Template</button>
@@ -198,7 +207,7 @@
                 <div id="email-trends"></div>
             </div>
             
-            <button onclick="resetAnalytics()" style="background: #dc3545; margin-top: 20px;">Reset Analytics</button>
+            <button onclick="resetAnalytics()" style="background: var(--danger); margin-top: var(--spacing-lg);">Reset Analytics</button>
         </div>
         
         <div id="status" class="status"></div>
