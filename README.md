@@ -2,6 +2,8 @@
 
 A lightweight Flask-based email automation assistant that uses Ollama-powered AI to generate, analyze, summarize, and send emails with smart templates and scheduling support.
 
+<img src="./app/static/img/agent-email.png" />
+
 ## 🚀 What it does
 
 - Generate professional email content from a recipient, context, and tone
